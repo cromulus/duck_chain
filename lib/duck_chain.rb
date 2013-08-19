@@ -13,9 +13,10 @@ ActiveRecord::Base.subclasses.select{|m|
   end
   res
 }.each{|model|
-  cols=model.column_names
-  code = "class #{model.name} < ActiveRecord::Base \n"
-  code += "duck_chain #{cols.join(",:").insert(0,":")} \n"
-  code += "end"
-  eval(code)
+  cols = model.column_names.map(&:to_sym)
+  model.send(:duck_chain,*cols)
+  # code = "class #{model.name} < ActiveRecord::Base \n"
+  # code += "duck_chain #{cols.join(",:").insert(0,":")} \n"
+  # code += "end"
+  # eval(code)
 }
