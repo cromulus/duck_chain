@@ -23,29 +23,29 @@ module DuckChain
     def self.create_eq_methods(model_attributes)
       Toolset.set_as_array(model_attributes).each do |m|
         ['eq','equals','is','in'].each do |suffix|
-          self.class.send(:define_method, "#{m}_#{suffix}", Proc.new{ |search_term| 
+          self.class.send(:define_method, "#{m}_#{suffix}", Proc.new{ |search_term|
               if search_term.is_a?(Array) || search_term.is_a?(Range)
-                where(["#{m} IN (?)", search_term])               
+                where(["#{m} IN (?)", search_term])
               else
                 where(["#{m} = ?", search_term])
               end
-            } 
+            }
           )
         end
 
         ['neq','not_equal','is_not','does_not_equal','not_in'].each do |suffix|
-          self.class.send(:define_method, "#{m}_#{suffix}", Proc.new{ |search_term| 
+          self.class.send(:define_method, "#{m}_#{suffix}", Proc.new{ |search_term|
               if search_term.is_a?(Array) || search_term.is_a?(Range)
-                where(["? NOT IN (?)", m, search_term])               
+                where(["? NOT IN (?)", m, search_term])
               else
                 where(["? != ?", m, search_term])
               end
-            } 
+            }
           )
         end
       end
     end
-    
+
     # Creates 'like' class methods for the model
     # Ex:: Post.title_like("Foo")
     # Methods created include...
